@@ -45,7 +45,7 @@ To ensure the most stable and accurate color temperature when using the lightbox
 
 ## Credits
 
-lightPad was created by Anand Mandapati (`dev@highgain.design`).
+lightPad was created by [Anand Mandapati](https://github.com/anandman).
 
 ## License
 
