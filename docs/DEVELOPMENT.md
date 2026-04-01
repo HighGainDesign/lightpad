@@ -1,4 +1,4 @@
-# lightPad — Agent Instructions
+# lightPad — Development Guide
 
 ## Commands
 
@@ -18,31 +18,30 @@ A native iOS/iPadOS SwiftUI app that serves as a lightbox for scanning film nega
 
 Uses xcodegen (`project.yml`) to generate the Xcode project. Bundle ID: `design.highgain.lightpad`, Team: `UQ654V3JGQ`, minimum iOS 16.0.
 
+### Modules
+
+- **ContentView** — Main fullscreen lightbox with adaptive floating controls (top bar: presets + hide/show; bottom bar: sliders, toggles, tip jar)
+- **StoreManager** — StoreKit 2 singleton for loading/purchasing consumable tip products
+- **TipJarView** — Sheet presenting three tip tiers via in-app purchase
+- **LightpadApp** — App entry point, manages idle timer (keep-awake)
+
 ## Key Design Decisions
 
-- **Kelvin→RGB conversion**: `kelvinToRGB()` in ContentView.swift implements the color math formula
+- **Kelvin→RGB conversion**: `kelvinToRGB()` implements the color math formula
 - **Native brightness control**: Directly sets `UIScreen.main.brightness`; user prompted to disable Display Accommodations for best results
 - **Persistent settings**: `@AppStorage` for brightness, Kelvin temp, and UI preferences
 - **Adaptive UI contrast**: `effectiveLuminance` determines whether floating panel uses light or dark text
-- **Debug overlay**: Built-in but commented out by default; toggle available in ContentView.swift
+- **Debug overlay**: Built-in but commented out by default
+- **Tip jar**: StoreKit 2 consumable IAPs (small/medium/large). StoreKit config file for simulator testing
 
 ## Gotchas
 
 - **Gesture conflicts**: Uses `simultaneousGesture(LongPressGesture(minimumDuration: 0.6))` — don't let other gestures consume taps before the main ZStack
 - **Brightness is async**: System brightness can change outside the app. Test `onChange(of: scenePhase)` logic on real devices with lock/unlock cycles
+- **StoreKit testing**: Set `TipProducts.storekit` in scheme Run settings for simulator IAP testing
 
 ## Safety & Permissions
 
 - **Allowed**: Edit Swift source, update project.yml, modify assets
 - **Ask first**: Changes to bundle ID, team ID, or deployment target
 - **Never**: Commit signing keys or provisioning profiles
-
-## Session Continuity
-
-See HANDOFF.md for current task state and next steps.
-
-## Handoff Protocol
-
-This project uses AGENTS.md + HANDOFF.md for cross-agent continuity.
-On session start: read both files. While working: update HANDOFF.md before/after each step.
-On session end: full HANDOFF.md update, commit it.

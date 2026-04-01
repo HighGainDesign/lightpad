@@ -87,3 +87,10 @@ iOSInjectionProject/
 Lightpad.xcodeproj/
 Lightpad.xcworkspace/
 .DS_Store
+
+# Agent / handoff files (local only)
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.cursorrules
+HANDOFF.md
