@@ -1,0 +1,64 @@
+{
+  "identifier" : "E6B1D4A0-TIP-JAR",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "0.99",
+      "familyShareable" : false,
+      "internalID" : "tip_small_001",
+      "localizations" : [
+        {
+          "description" : "A small tip to support LightPad",
+          "displayName" : "Small Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "design.highgain.lightpad.tip.small",
+      "referenceName" : "Small Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "2.99",
+      "familyShareable" : false,
+      "internalID" : "tip_medium_001",
+      "localizations" : [
+        {
+          "description" : "A generous tip to support LightPad",
+          "displayName" : "Medium Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "design.highgain.lightpad.tip.medium",
+      "referenceName" : "Medium Tip",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "tip_large_001",
+      "localizations" : [
+        {
+          "description" : "An amazing tip to support LightPad",
+          "displayName" : "Large Tip",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "design.highgain.lightpad.tip.large",
+      "referenceName" : "Large Tip",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "lightpad_001",
+    "_developerTeamID" : "UQ654V3JGQ"
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

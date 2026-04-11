@@ -17,6 +17,8 @@ struct ContentView: View {
     @State private var lastBrightnessChange = Date()
     @AppStorage("hideStartupHint") private var hideStartupHint = false
     @AppStorage("debugOverlayEnabled") private var debugOverlay = false
+    @State private var showTipJar = false
+    @StateObject private var storeManager = StoreManager.shared
 
     private let presets: [Preset] = [
         Preset(id: "bw", name: "B&W (D50)", kelvin: 5000),
@@ -180,6 +182,9 @@ struct ContentView: View {
                 showControlsBriefly()
             }
         }
+        .sheet(isPresented: $showTipJar) {
+            TipJarView(store: storeManager)
+        }
         .onReceive(brightnessTimer) { _ in
             let current = Double(UIScreen.main.brightness)
             if abs(current - observedBrightness) > 0.005 {
@@ -192,7 +197,7 @@ struct ContentView: View {
     private var topBar: some View {
         HStack(spacing: 16) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("lightPad")
+                Text("LightPad")
                     .font(.headline)
                     .foregroundColor(primaryText)
                 Text("Film viewing lightbox")
@@ -309,6 +314,24 @@ struct ContentView: View {
 //                }
 //                .toggleStyle(SwitchToggleStyle(tint: .orange))
 
+                Button(action: { showTipJar = true }) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "heart.fill")
+                            .font(.caption)
+                        Text("Tip Jar")
+                            .font(.footnote)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(buttonBackground)
+                    .overlay(
+                        Capsule()
+                            .stroke(buttonBorder, lineWidth: 1)
+                    )
+                    .foregroundColor(primaryText)
+                    .clipShape(Capsule())
+                }
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Tips")
                         .font(.footnote)
@@ -360,7 +383,7 @@ struct ContentView: View {
                     .resizable()
                     .scaledToFit()
                     .frame(width: 140, height: 140)
-                Text("lightPad")
+                Text("LightPad")
                     .font(.title2)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
