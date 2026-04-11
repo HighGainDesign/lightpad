@@ -1,4 +1,4 @@
-# lightPad — Development Guide
+# LightPad — Development Guide
 
 ## Commands
 

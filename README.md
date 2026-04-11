@@ -1,4 +1,4 @@
-# lightPad
+# LightPad
 
 A native iOS and iPadOS app that turns your device into a professional film viewing lightbox. It provides an adjustable, color-accurate backlight for scanning or viewing photographic film negatives and slides.
 
@@ -45,7 +45,7 @@ To ensure the most stable and accurate color temperature when using the lightbox
 
 ## Credits
 
-lightPad was created by [Anand Mandapati](https://github.com/anandman).
+LightPad was created by [Anand Mandapati](https://github.com/anandman).
 
 ## License
 
