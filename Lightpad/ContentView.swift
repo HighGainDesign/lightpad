@@ -38,36 +38,8 @@ struct ContentView: View {
         (0.2126 * rgb.r) + (0.7152 * rgb.g) + (0.0722 * rgb.b)
     }
 
-    private var useDarkPanel: Bool {
-        effectiveLuminance > 0.55
-    }
-
-    private var panelBackground: Color {
-        useDarkPanel ? Color.black.opacity(0.65) : Color.white.opacity(0.78)
-    }
-
-    private var panelStroke: Color {
-        useDarkPanel ? Color.white.opacity(0.12) : Color.black.opacity(0.12)
-    }
-
-    private var primaryText: Color {
-        useDarkPanel ? .white : .black
-    }
-
-    private var mutedText: Color {
-        useDarkPanel ? Color.white.opacity(0.65) : Color.black.opacity(0.6)
-    }
-
-    private var buttonBackground: Color {
-        useDarkPanel ? Color.white.opacity(0.1) : Color.white.opacity(0.95)
-    }
-
-    private var buttonBorder: Color {
-        useDarkPanel ? Color.white.opacity(0.25) : Color.black.opacity(0.2)
-    }
-
-    private var activeFill: Color {
-        useDarkPanel ? Color.orange.opacity(0.22) : Color.orange.opacity(0.2)
+    private var palette: PanelPalette {
+        PanelPalette(useDark: effectiveLuminance > 0.55)
     }
 
     private let brightnessTimer = Timer.publish(every: 0.3, on: .main, in: .common).autoconnect()
@@ -199,10 +171,10 @@ struct ContentView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("LightPad")
                     .font(.headline)
-                    .foregroundColor(primaryText)
+                    .foregroundColor(palette.primaryText)
                 Text("Film viewing lightbox")
                     .font(.footnote)
-                    .foregroundColor(mutedText)
+                    .foregroundColor(palette.mutedText)
             }
 
             Spacer()
@@ -213,16 +185,7 @@ struct ContentView: View {
                         kelvin = preset.kelvin
                     }) {
                         Text(preset.name)
-                            .font(.subheadline)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
-                            .background(activePresetId == preset.id ? activeFill : buttonBackground)
-                            .overlay(
-                                Capsule()
-                                    .stroke(activePresetId == preset.id ? Color.orange : buttonBorder, lineWidth: 1)
-                            )
-                            .foregroundColor(primaryText)
-                            .clipShape(Capsule())
+                            .capsuleButton(palette, isActive: activePresetId == preset.id)
                     }
                 }
             }
@@ -231,25 +194,10 @@ struct ContentView: View {
                 toggleControls()
             }) {
                 Text(controlsHidden ? "Show controls" : "Hide controls")
-                    .font(.subheadline)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(buttonBackground)
-                    .overlay(
-                        Capsule()
-                            .stroke(buttonBorder, lineWidth: 1)
-                    )
-                    .foregroundColor(primaryText)
-                    .clipShape(Capsule())
+                    .capsuleButton(palette)
             }
         }
-        .padding(12)
-        .background(panelBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(panelStroke, lineWidth: 1)
-        )
+        .panelChrome(palette)
     }
 
     private var bottomBar: some View {
@@ -258,24 +206,24 @@ struct ContentView: View {
                 Text("\(Int(kelvin))K")
                     .font(.title2)
                     .fontWeight(.semibold)
-                    .foregroundColor(primaryText)
+                    .foregroundColor(palette.primaryText)
                 Text("RGB \(Int(rgb.r * 255)), \(Int(rgb.g * 255)), \(Int(rgb.b * 255))")
                     .font(.footnote)
-                    .foregroundColor(mutedText)
+                    .foregroundColor(palette.mutedText)
             }
 
             VStack(spacing: 12) {
                 HStack {
                     Text("Temperature")
                         .font(.footnote)
-                        .foregroundColor(mutedText)
+                        .foregroundColor(palette.mutedText)
                     Slider(value: $kelvin, in: 3000...7000, step: 50)
                         .tint(.orange)
                 }
                 HStack {
                     Text("Screen brightness")
                         .font(.footnote)
-                        .foregroundColor(mutedText)
+                        .foregroundColor(palette.mutedText)
                     Slider(value: $brightness, in: 0.2...1.0, step: 0.01)
                         .tint(.orange)
                     Button(action: {
@@ -285,9 +233,9 @@ struct ContentView: View {
                             .font(.caption)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
-                            .background(buttonBackground)
+                            .background(palette.buttonBackground)
                             .clipShape(Capsule())
-                            .foregroundColor(primaryText)
+                            .foregroundColor(palette.primaryText)
                     }
                 }
             }
@@ -296,21 +244,21 @@ struct ContentView: View {
                 Toggle(isOn: $keepAwake) {
                     Text("Keep awake")
                         .font(.footnote)
-                        .foregroundColor(primaryText)
+                        .foregroundColor(palette.primaryText)
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .orange))
 
                 Toggle(isOn: $autoMaxBrightness) {
                     Text("Auto max brightness")
                         .font(.footnote)
-                        .foregroundColor(primaryText)
+                        .foregroundColor(palette.primaryText)
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .orange))
 
 //                Toggle(isOn: $debugOverlay) {
 //                    Text("Debug overlay")
 //                        .font(.footnote)
-//                        .foregroundColor(primaryText)
+//                        .foregroundColor(palette.primaryText)
 //                }
 //                .toggleStyle(SwitchToggleStyle(tint: .orange))
 
@@ -321,39 +269,25 @@ struct ContentView: View {
                         Text("Tip Jar")
                             .font(.footnote)
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(buttonBackground)
-                    .overlay(
-                        Capsule()
-                            .stroke(buttonBorder, lineWidth: 1)
-                    )
-                    .foregroundColor(primaryText)
-                    .clipShape(Capsule())
+                    .capsuleButton(palette)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Tips")
                         .font(.footnote)
-                        .foregroundColor(mutedText)
+                        .foregroundColor(palette.mutedText)
                     Text("Disable True Tone/Night Shift in Control Center for stable color.")
                         .font(.caption)
-                        .foregroundColor(primaryText.opacity(0.8))
+                        .foregroundColor(palette.primaryText.opacity(0.8))
                         .fixedSize(horizontal: false, vertical: true)
                     Text("Check Auto‑Brightness, Reduce White Point, and Color Filters in Accessibility.")
                         .font(.caption2)
-                        .foregroundColor(mutedText)
+                        .foregroundColor(palette.mutedText)
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
         }
-        .padding(12)
-        .background(panelBackground)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(panelStroke, lineWidth: 1)
-        )
+        .panelChrome(palette)
     }
 
     private func showControlsBriefly() {
