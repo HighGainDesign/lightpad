@@ -5,7 +5,11 @@ struct TipJarView: View {
     @ObservedObject var store: StoreManager
     @Environment(\.dismiss) private var dismiss
 
-    private let tipEmojis = ["☕", "🎞️", "🌟"]
+    private let tipEmojis: [String: String] = [
+        "design.highgain.lightpad.tip.small": "☕",
+        "design.highgain.lightpad.tip.medium": "🎞️",
+        "design.highgain.lightpad.tip.large": "🌟"
+    ]
 
     var body: some View {
         NavigationStack {
@@ -22,13 +26,28 @@ struct TipJarView: View {
                 }
                 .padding(.top, 8)
 
-                if store.products.isEmpty {
+                if let error = store.loadError {
+                    VStack(spacing: 12) {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                        Button("Retry") {
+                            Task { await store.loadProducts() }
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                    .padding()
+                } else if store.products.isEmpty {
                     ProgressView("Loading…")
                         .padding()
                 } else {
                     VStack(spacing: 12) {
-                        ForEach(Array(store.products.enumerated()), id: \.element.id) { index, product in
-                            tipButton(product: product, emoji: tipEmojis[safe: index] ?? "💰")
+                        ForEach(store.products, id: \.id) { product in
+                            tipButton(
+                                product: product,
+                                emoji: tipEmojis[product.id] ?? "💰"
+                            )
                         }
                     }
                     .padding(.horizontal)
@@ -40,6 +59,7 @@ struct TipJarView: View {
                         .font(.headline)
                         .foregroundColor(.orange)
                         .padding(.top, 4)
+                        .accessibilityLabel("Thank you for your tip!")
                 case .failed(let message):
                     Text(message)
                         .font(.caption)
@@ -66,12 +86,8 @@ struct TipJarView: View {
                 await store.loadProducts()
             }
         }
-        .onChange(of: store.purchaseState) { state in
-            if state == .purchased {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    dismiss()
-                }
-            }
+        .onDisappear {
+            store.resetPurchaseState()
         }
     }
 
@@ -100,11 +116,7 @@ struct TipJarView: View {
         }
         .buttonStyle(.plain)
         .disabled(store.purchaseState == .purchasing)
-    }
-}
-
-private extension Array {
-    subscript(safe index: Index) -> Element? {
-        indices.contains(index) ? self[index] : nil
+        .accessibilityElement(children: .combine)
+        .accessibilityHint(store.purchaseState == .purchasing ? "Purchase in progress" : "Double tap to purchase")
     }
 }

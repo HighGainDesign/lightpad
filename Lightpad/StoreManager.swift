@@ -12,6 +12,7 @@ final class StoreManager: ObservableObject {
 
     @Published var products: [Product] = []
     @Published var purchaseState: PurchaseState = .idle
+    @Published var loadError: String?
 
     enum PurchaseState: Equatable {
         case idle
@@ -23,12 +24,18 @@ final class StoreManager: ObservableObject {
     private init() {}
 
     func loadProducts() async {
+        loadError = nil
         do {
             let fetched = try await Product.products(for: Self.productIDs)
             products = fetched.sorted { $0.price < $1.price }
         } catch {
             products = []
+            loadError = error.localizedDescription
         }
+    }
+
+    func resetPurchaseState() {
+        purchaseState = .idle
     }
 
     func purchase(_ product: Product) async {
