@@ -83,31 +83,42 @@ struct BottomBarView: View {
             }
             .toggleStyle(SwitchToggleStyle(tint: .orange))
 
-            Button(action: onShowTipJar) {
-                HStack(spacing: 4) {
-                    Image(systemName: "heart.fill")
-                        .font(.caption)
-                    Text("Tip Jar")
+            HStack(alignment: .bottom, spacing: 10) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Tips")
                         .font(.footnote)
+                        .foregroundColor(palette.mutedText)
+                    Text("Disable True Tone/Night Shift in Control Center for stable color.")
+                        .font(.caption)
+                        .foregroundColor(palette.primaryText.opacity(0.8))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text("Check Auto\u{2011}Brightness, Reduce White Point, and Color Filters in Accessibility.")
+                        .font(.caption2)
+                        .foregroundColor(palette.mutedText)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
-                .capsuleButton(palette)
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityLabel("Tip Jar")
-            .accessibilityHint("Opens tip options to support LightPad")
 
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Tips")
-                    .font(.footnote)
-                    .foregroundColor(palette.mutedText)
-                Text("Disable True Tone/Night Shift in Control Center for stable color.")
-                    .font(.caption)
-                    .foregroundColor(palette.primaryText.opacity(0.8))
-                    .fixedSize(horizontal: false, vertical: true)
-                Text("Check Auto\u{2011}Brightness, Reduce White Point, and Color Filters in Accessibility.")
-                    .font(.caption2)
-                    .foregroundColor(palette.mutedText)
-                    .fixedSize(horizontal: false, vertical: true)
+                Spacer()
+
+                Button(action: onShowTipJar) {
+                    VStack(spacing: 4) {
+                        Image(systemName: "heart.fill")
+                            .font(.title3)
+                        Text("Tip Jar")
+                            .font(.caption2)
+                    }
+                    .foregroundColor(.orange)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 10)
+                    .background(palette.buttonBackground)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .stroke(palette.buttonBorder, lineWidth: 1)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                }
+                .accessibilityLabel("Tip Jar")
+                .accessibilityHint("Opens tip options to support LightPad")
             }
         }
     }

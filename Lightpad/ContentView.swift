@@ -191,7 +191,7 @@ struct ContentView: View {
                 Text("Film viewing lightbox")
                     .font(.footnote)
                     .foregroundColor(.white.opacity(0.7))
-                Text("© 2026 Anand Mandapati")
+                Text("© 2026 High Gain Design")
                     .font(.caption2)
                     .foregroundColor(.white.opacity(0.6))
                     .padding(.top, 24)
