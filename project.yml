@@ -11,6 +11,7 @@ targets:
       - path: Lightpad
     settings:
       base:
+        TARGETED_DEVICE_FAMILY: "2"
         DEVELOPMENT_TEAM: UQ654V3JGQ
         PRODUCT_BUNDLE_IDENTIFIER: design.highgain.lightpad
         INFOPLIST_FILE: Lightpad/Info.plist
